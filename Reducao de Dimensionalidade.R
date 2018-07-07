@@ -77,8 +77,25 @@ display_number <- function( x = NA, dataset = train){
 display_number(51000)
 
 data.train1 <-  data.frame(y = train$y, train$x)
-fit <- train(y ~ .
-            , data     = data.train1
+fit <- train( y ~ .
+            , data     = head(data.train1, 1000)
             , method   = 'svmRadial'
             , tuneGrid = data.frame(sigma = 0.0107249, C = 1)
             )
+
+train.predicted1 <- predict(fit, newdata = data.train1)
+cbind(data.train1$y, round(train.predicted1))[1:13,]
+
+data.train2 <- head(data.frame(y = as.factor(train$y), train$x), 1000)
+
+fit <- train( y ~ .
+            , data     = data.train2
+            , method   = 'svmRadial'
+            , tuneGrid = data.frame(sigma = 0.0107249, C = 1)
+            )
+
+train.predicted2 <- predict(fit, newdata = data.train2)
+
+cbind(data.train2$y, train.predicted2)[1:13,]
+
+confusionMatrix(train.predicted2, data.train2$y)
